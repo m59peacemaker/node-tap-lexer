@@ -1,5 +1,6 @@
 [
   './is-type',
   './get-type',
-  './parser'
+  './simple-lexer',
+  './yamlish-lexer'
 ].forEach(require)

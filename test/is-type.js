@@ -9,6 +9,7 @@ test('isType.version', t => {
 
   t.false(isType.version('TAP version 1 3'))
   t.false(isType.version('TAP version 1 b'))
+  t.end()
 })
 
 test('isType.plan', t => {
@@ -21,6 +22,7 @@ test('isType.plan', t => {
   t.false(isType.plan('1..b'))
   t.false(isType.plan('b..123'))
   t.false(isType.plan('1.5'))
+  t.end()
 })
 
 test('isType.test', t => {
@@ -31,6 +33,7 @@ test('isType.test', t => {
 
   t.false(isType.test('meh'))
   t.false(isType.test('  ---'))
+  t.end()
 })
 
 test('isType.bailout', t => {
@@ -43,6 +46,7 @@ test('isType.bailout', t => {
   t.false(isType.bailout('Bail out'))
   t.false(isType.bailout('Bail out For reasons.'))
   t.false(isType.bailout('Bail out For reasons!'))
+  t.end()
 })
 
 test('isType.diagnostic', t => {
@@ -53,6 +57,7 @@ test('isType.diagnostic', t => {
   t.false(isType.diagnostic('#foo bar'))
   t.false(isType.diagnostic('foo bar'))
   t.false(isType.diagnostic('foo # bar'))
+  t.end()
 })
 
 test('isType.yamlishOpen', t => {
@@ -63,6 +68,7 @@ test('isType.yamlishOpen', t => {
   t.false(isType.yamlishOpen(' ---'))
   t.false(isType.yamlishOpen('  --- '))
   t.false(isType.yamlishOpen('  -b-'))
+  t.end()
 })
 
 test('isType.yamlishClose', t => {
@@ -73,4 +79,5 @@ test('isType.yamlishClose', t => {
   t.false(isType.yamlishClose(' ...'))
   t.false(isType.yamlishClose('  ... '))
   t.false(isType.yamlishClose('  .b.'))
+  t.end()
 })

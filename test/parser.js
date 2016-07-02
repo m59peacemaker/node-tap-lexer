@@ -7,7 +7,7 @@ const getFixture = name => {
   return fs.readFileSync(path.join(__dirname, 'fixtures', name), 'utf8')
 }
 
-test.only('parser', t => {
+test('parser', t => {
   const parser = Parser()
   const types = ['plan', 'test']
   t.plan(types.length)
@@ -17,6 +17,8 @@ test.only('parser', t => {
   })
   parser.write('1..1\n')
   parser.write('ok 1 should be truthy\n')
+  parser.end()
+  t.end()
 })
 
 test('parser', t => {
@@ -40,11 +42,12 @@ test('parser', t => {
   })
   inputs.forEach(input => parser.write(input))
   parser.end()
+  t.end()
 })
 
 
 const yamlish1 = getFixture('1.yamlish')
-test('appends yamlish to assert', t => {
+test.skip('appends yamlish to assert', t => {
   const parser = Parser()
   const inputs = [
     [
@@ -64,4 +67,5 @@ test('appends yamlish to assert', t => {
   })
   inputs.forEach(input => parser.write(input))
   parser.end()
+  t.end()
 })

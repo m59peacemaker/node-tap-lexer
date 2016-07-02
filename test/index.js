@@ -1,5 +1,5 @@
 [
-  //'./is-type',
-  //'./get-type',
+  './is-type',
+  './get-type',
   './parser'
 ].forEach(require)

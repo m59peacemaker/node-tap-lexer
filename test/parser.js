@@ -25,15 +25,15 @@ test('parser', t => {
   const parser = Parser()
   const inputs = [
     [
-      'TAP version 13',
-      '1..1',
-      'ok 1 should be truthy',
+      'TAP version 13\n',
+      '1..1\n',
+      'ok 1 should be truthy\n',
     ]
-  ].map(arr => arr.join('\n'))
+  ].map(arr => arr.join(''))
   const datas = [
-    {type: 'version', value: 'TAP version 13'},
-    {type: 'plan',    value: '1..1'},
-    {type: 'test',  value: 'ok 1 should be truthy'}
+    {type: 'version', value: 'TAP version 13\n'},
+    {type: 'plan',    value: '1..1\n'},
+    {type: 'test',  value: 'ok 1 should be truthy\n'}
   ]
   t.plan(datas.length)
   parser.on('data', data => {

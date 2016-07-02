@@ -12,12 +12,12 @@ test.only('parser', t => {
   const types = ['plan', 'assert']
   t.plan(types.length)
   parser.on('data', data => {
-    console.log(JSON.parse(data))
+    console.log(data)
     t.equal(data.type, types[0])
     types.shift()
   })
-  parser.push('1..1\n')
-  parser.push('ok 1 should be truthy\n')
+  parser.write('1..1\n')
+  parser.write('ok 1 should be truthy\n')
 })
 
 test('parser', t => {

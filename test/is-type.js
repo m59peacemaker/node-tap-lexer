@@ -1,24 +1,14 @@
 const test   = require('tape')
 const isType = require('../lib/is-type')
 
-test('isType.comment', t => {
+test('isType.version', t => {
   t.plan(4)
 
-  t.true(isType.comment('# foo bar'))
+  t.true(isType.version('TAP version 13'))
+  t.true(isType.version('TAP version 1.b'))
 
-  t.false(isType.comment('#foo bar'))
-  t.false(isType.comment('foo bar'))
-  t.false(isType.comment('foo # bar'))
-})
-
-test('isType.assert', t => {
-  t.plan(4)
-
-  t.true(isType.assert('ok 1 should be truthy'))
-  t.true(isType.assert('not ok 5 should be equal'))
-
-  t.false(isType.assert('meh'))
-  t.false(isType.assert('  ---'))
+  t.false(isType.version('TAP version 1 3'))
+  t.false(isType.version('TAP version 1 b'))
 })
 
 test('isType.plan', t => {
@@ -33,14 +23,36 @@ test('isType.plan', t => {
   t.false(isType.plan('1.5'))
 })
 
-test('isType.version', t => {
+test('isType.test', t => {
   t.plan(4)
 
-  t.true(isType.version('TAP version 13'))
-  t.true(isType.version('TAP version 1.b'))
+  t.true(isType.test('ok 1 should be truthy'))
+  t.true(isType.test('not ok 5 should be equal'))
 
-  t.false(isType.version('TAP version 1 3'))
-  t.false(isType.version('TAP version 1 b'))
+  t.false(isType.test('meh'))
+  t.false(isType.test('  ---'))
+})
+
+test('isType.bailout', t => {
+  t.plan(6)
+
+  t.true(isType.bailout('Bail out!'))
+  t.true(isType.bailout('Bail out! Bail out!'))
+  t.true(isType.bailout('Bail out! For reasons.'))
+
+  t.false(isType.bailout('Bail out'))
+  t.false(isType.bailout('Bail out For reasons.'))
+  t.false(isType.bailout('Bail out For reasons!'))
+})
+
+test('isType.diagnostic', t => {
+  t.plan(4)
+
+  t.true(isType.diagnostic('# foo bar'))
+
+  t.false(isType.diagnostic('#foo bar'))
+  t.false(isType.diagnostic('foo bar'))
+  t.false(isType.diagnostic('foo # bar'))
 })
 
 test('isType.yamlishOpen', t => {

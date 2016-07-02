@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "tape test/*.js"
+    "test": "node test"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,8 @@
     "tape": "^4.6.0"
   },
   "dependencies": {
+    "split2": "^2.1.0",
+    "through2": "^2.0.1",
     "underscore.string": "^3.3.4"
   }
 }

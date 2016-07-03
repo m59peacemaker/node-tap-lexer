@@ -65,7 +65,6 @@ const yamlishLines = rtrim(yamlish1).split('\n')
 const yamlishDatas = yamlishLines
   .map(line => ({type: 'unknown', value: line}))
   .map((obj, i) => {
-    console.log(i)
     if (i === 0) {
       obj.type = 'yamlishOpen'
     }

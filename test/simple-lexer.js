@@ -1,40 +1,41 @@
 const test   = require('tape')
-const Parser = require('../lib/parser')
+const simpleLexer = require('../lib/simple-lexer')
 
 test('emits correct types', t => {
-  const parser = Parser()
-  const types = ['plan', 'test']
+  const inputs = [
+    '1..1',
+    'ok 1 should be truthy',
+    '  ---',
+    'meh'
+  ]
+  const types = ['plan', 'test', 'unknown', 'unknown']
+  const lexer = simpleLexer()
   t.plan(types.length)
-  parser.on('data', data => {
+  lexer.on('data', data => {
     t.equal(data.type, types[0])
     types.shift()
   })
-  parser.write('1..1\n')
-  parser.write('ok 1 should be truthy\n')
-  parser.end()
-  t.end()
+  inputs.forEach(v => lexer.write(v))
+  lexer.end()
 })
 
 test('emits correct types and values', t => {
-  const parser = Parser()
+  const lexer = simpleLexer()
   const inputs = [
-    [
-      'TAP version 13\n',
-      '1..1\n',
-      'ok 1 should be truthy\n',
-    ]
-  ].map(arr => arr.join(''))
+    'TAP version 13',
+    '1..1',
+    'ok 1 should be truthy',
+  ]
   const datas = [
-    {type: 'version', value: 'TAP version 13\n'},
-    {type: 'plan',    value: '1..1\n'},
-    {type: 'test',    value: 'ok 1 should be truthy\n'}
+    {type: 'version', value: 'TAP version 13'},
+    {type: 'plan',    value: '1..1'},
+    {type: 'test',    value: 'ok 1 should be truthy'}
   ]
   t.plan(datas.length)
-  parser.on('data', data => {
+  lexer.on('data', data => {
     t.deepEqual(data, datas[0])
     datas.shift()
   })
-  inputs.forEach(input => parser.write(input))
-  parser.end()
-  t.end()
+  inputs.forEach(input => lexer.write(input))
+  lexer.end()
 })

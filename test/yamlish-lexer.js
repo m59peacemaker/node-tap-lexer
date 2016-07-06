@@ -1,97 +1,75 @@
 const test   = require('tape')
-const Parser = require('../lib/parser')
 const fs     = require('fs')
 const path   = require('path')
 const rtrim  = require('underscore.string/rtrim')
+const yamlishLexer = require('../lib/yamlish-lexer')
 
 const getFixture = name => {
   return fs.readFileSync(path.join(__dirname, 'fixtures', name), 'utf8')
 }
 
-const yamlish1 = getFixture('1.yamlish')
+const yamlishDocument = getFixture('1.yamlish')
+const yamlishLines = rtrim(yamlishDocument).split('\n').map(v => ({type: 'unknown', value: v + '\n'}))
+
 test('emits yamlish block when yamlish block is last', t => {
-  const parser = Parser()
+  t.plan(1)
+  const lexer = yamlishLexer()
   const inputs = [
-    [
-      '1..1\n',
-      'not ok 1 should be truthy\n',
-    ].join(''),
-    yamlish1
+    {type: 'plan', value: '1..1'},
+    {type: 'test', value: 'not ok 1 should be truthy'},
+    ...yamlishLines
   ]
-  const datas = [
-    {type: 'plan',    value: '1..1\n'},
-    {type: 'test',    value: 'not ok 1 should be truthy\n'},
-    {type: 'yamlish', value: yamlish1}
-  ]
-  t.plan(datas.length)
-  parser.on('data', data => {
-    t.deepEqual(data, datas[0])
-    datas.shift()
+  let counter = 0
+  lexer.on('data', data => {
+    ++counter
+    if (counter === 3) {
+      t.deepEqual(data, {type: 'yamlish', value: yamlishDocument})
+    }
   })
-  inputs.forEach(input => parser.write(input))
-  parser.end()
-  t.end()
+  inputs.forEach(input => lexer.write(input))
+  lexer.end()
 })
 
 test('emits yamlish block when there are lines after yamlish', t => {
-  const parser = Parser()
+  const lexer = yamlishLexer()
   const inputs = [
-    [
-      '1..2\n',
-      'not ok 1 should be truthy\n',
-    ].join(''),
-    yamlish1,
-    'ok 1 should be truthy\n'
+    {type: 'plan', value: '1..2'},
+    {type: 'test', value: 'not ok 1 should be truthy'},
+    ...yamlishLines,
+    {type: 'test', value: 'ok 2 should be truthy'}
   ]
   const datas = [
-    {type: 'plan',    value: '1..2\n'},
-    {type: 'test',    value: 'not ok 1 should be truthy\n'},
-    {type: 'yamlish', value: yamlish1},
-    {type: 'test',    value: 'ok 1 should be truthy\n'},
+    {type: 'plan',    value: '1..2'},
+    {type: 'test',    value: 'not ok 1 should be truthy'},
+    {type: 'yamlish', value: yamlishDocument},
+    {type: 'test',    value: 'ok 2 should be truthy'},
   ]
   t.plan(datas.length)
-  parser.on('data', data => {
+  lexer.on('data', data => {
     t.deepEqual(data, datas[0])
     datas.shift()
   })
-  inputs.forEach(input => parser.write(input))
-  parser.end()
-  t.end()
+  inputs.forEach(input => lexer.write(input))
+  lexer.end()
 })
 
-const yamlishLines = rtrim(yamlish1).split('\n')
-
-// yamlishOpen, bunch of unknowns, yamlishClose
-const yamlishDatas = yamlishLines
-  .map(line => ({type: 'unknown', value: line}))
-  .map((obj, i) => {
-    if (i === 0) {
-      obj.type = 'yamlishOpen'
-    }
-    if (i === yamlishLines.length - 1) {
-      obj.type = 'yamlishClose'
-    }
-    return obj
-  })
-
 test('does not emit yamlish block when previous line is not a test', t => {
-  const parser = Parser()
+  const lexer = yamlishLexer()
   const inputs = [
-    '1..2\n',
-    yamlish1,
-    'ok 1 should be truthy\n'
+    {type: 'plan', value: '1..2'},
+    ...yamlishLines,
+    {type: 'test', value: 'ok 1 should be truthy'}
   ]
   const datas = [
-    {type: 'plan',    value: '1..2\n'},
-    ...yamlishDatas,
-    {type: 'test',    value: 'ok 1 should be truthy\n'},
+    {type: 'plan',    value: '1..2'},
+    ...yamlishLines,
+    {type: 'test',    value: 'ok 1 should be truthy'},
   ]
   t.plan(datas.length)
-  parser.on('data', data => {
+  lexer.on('data', data => {
     t.equal(data.type, datas[0].type)
     datas.shift()
   })
-  inputs.forEach(input => parser.write(input))
-  parser.end()
-  t.end()
+  inputs.forEach(input => lexer.write(input))
+  lexer.end()
 })

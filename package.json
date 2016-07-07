@@ -1,6 +1,6 @@
 {
   "name": "tap-lexer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Receives a stream of TAP lines and emits JS objects of types and values.",
   "main": "index.js",
   "bin": {
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/m59peacemaker/node-tap-parser"
+    "url": "https://github.com/m59peacemaker/node-tap-lexer"
   },
   "author": {
     "name": "Johnny Hauser",

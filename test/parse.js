@@ -1,5 +1,6 @@
 const test = require('tape')
 const parse = require('../lib/parse')
+const getFixture = require('./lib/get-fixture')
 
 const m = (...objects) => {
   return Object.assign({}, ...objects)
@@ -95,6 +96,12 @@ const data = {
       '# like a fool',
       {message: 'like a fool'}
     ]
+  ],
+  yaml: [
+    [
+      getFixture('1.yaml'),
+      {document: JSON.parse(getFixture('1.json'))}
+    ]
   ]
 }
 
@@ -102,7 +109,7 @@ Object.keys(data).forEach(k => {
   const sets = data[k]
   sets.forEach(set => {
     const input = set[0]
-    test(`parse ${k}: ${input}`, t => {
+    test(`parse ${k}: ${input.split('\n')[0]}`, t => {
       t.plan(1)
       t.deepEqual(parse(k, input), set[1])
     })

@@ -1,5 +1,5 @@
 const test   = require('tape')
-const getType = require('../lib/simple-lexer/get-type')
+const getType = require('../lib/get-type')
 
 const data = {
   version: [

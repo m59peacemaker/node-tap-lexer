@@ -3,8 +3,8 @@ const rtrim  = require('underscore.string/rtrim')
 const yamlLexer = require('../lib/yaml-lexer')
 const getFixture = require('./lib/get-fixture')
 
-const yamlDocument = getFixture('1.yaml')
-const yamlLines = rtrim(yamlDocument).split('\n').map(v => ({type: 'unknown', value: v + '\n'}))
+const yamlDocument = rtrim(getFixture('1.yaml'))
+const yamlLines = yamlDocument.split('\n').map(value => ({type: 'unknown', value}))
 
 test('emits yaml block when yaml block is last', t => {
   t.plan(1)

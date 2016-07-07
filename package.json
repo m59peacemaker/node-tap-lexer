@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Receives a stream of TAP lines and emits JS objects of types and values.",
   "main": "index.js",
+  "bin": {
+    "tap-lexer": "bin/cmd.js"
+  },
   "scripts": {
     "test": "tape test/*.js"
   },
@@ -12,10 +15,20 @@
     "lexing",
     "token"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m59peacemaker/node-tap-parser"
+  },
   "author": {
     "name": "Johnny Hauser",
     "email": "johnnyhauser@gmail.com"
   },
+  "contributors": [
+    {
+      "name": "Josh Duff",
+      "url": "https://github.com/TehShrike"
+    }
+  ],
   "license": "VOL",
   "devDependencies": {
     "tape": "^4.6.0",

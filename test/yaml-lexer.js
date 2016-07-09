@@ -34,10 +34,10 @@ test('emits yaml block when there are lines after yaml', t => {
     {type: 'test', value: 'ok 2 should be truthy'}
   ]
   const datas = [
-    {type: 'plan',    value: '1..2'},
-    {type: 'test',    value: 'not ok 1 should be truthy'},
+    {type: 'plan', value: '1..2'},
+    {type: 'test', value: 'not ok 1 should be truthy'},
     {type: 'yaml', value: yamlDocument},
-    {type: 'test',    value: 'ok 2 should be truthy'},
+    {type: 'test', value: 'ok 2 should be truthy'}
   ]
   t.plan(datas.length)
   lexer.on('data', data => {
@@ -55,14 +55,33 @@ test('does not emit yaml block when previous line is not a test', t => {
     ...yamlLines,
     {type: 'test', value: 'ok 1 should be truthy'}
   ]
-  const datas = [
-    {type: 'plan',    value: '1..2'},
-    ...yamlLines,
-    {type: 'test',    value: 'ok 1 should be truthy'},
-  ]
+  const datas = [...inputs]
   t.plan(datas.length)
   lexer.on('data', data => {
     t.equal(data.type, datas[0].type)
+    datas.shift()
+  })
+  inputs.forEach(input => lexer.write(input))
+  lexer.end()
+})
+
+test('works for multiple yaml blocks', t => {
+  const lexer = yamlLexer()
+  const inputs = [
+    {type: 'test', value: 'not ok 1 should be truthy'},
+    ...yamlLines,
+    {type: 'test', value: 'ok 2 should be truthy'},
+    ...yamlLines
+  ]
+  const datas = [
+    {type: 'test', value: 'not ok 1 should be truthy'},
+    {type: 'yaml', value: yamlDocument},
+    {type: 'test', value: 'ok 2 should be truthy'},
+    {type: 'yaml', value: yamlDocument}
+  ]
+  t.plan(datas.length)
+  lexer.on('data', data => {
+    t.deepEqual(data, datas[0])
     datas.shift()
   })
   inputs.forEach(input => lexer.write(input))

@@ -1,0 +1,7 @@
+ ---
+ message: 'First line invalid'
+ severity: fail
+ data:
+   got: 'Flirble'
+   expect: 'Fnible'
+ ...
